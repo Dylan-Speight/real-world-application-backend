@@ -8,28 +8,45 @@ const Investment = mongoose.model("Investment", {
   complete: Boolean
 });
 
+const User = mongoose.model("User", {
+  email: String,
+  password: String,
+  postcode: String
+});
+
 const typeDefs = `
   type Query {
     hello(name: String): String!
     investments: [Investment]
+    users: [User]
 }
   type Investment {
       id: ID!
       text: String!
       complete: Boolean
   }
+  type User {
+    id: ID!
+    email: String!
+    password: String!
+    postcode: String
+  }
   type Mutation {
       createInvestment(text: String!): Investment
       updateInvestment(id: ID!, complete: Boolean): Boolean
       removeInvestment(id: ID!): Boolean
 
+      createUser(email: String!): User
+      updateUser(id: ID!, complete: Boolean): Boolean
+      removeUser(id: ID!): Boolean
   }
 `;
 
 const resolvers = {
   Query: {
     hello: (_, { name }) => `Hello ${name || "World"}`,
-    investments: () => Investment.find()
+    investments: () => Investment.find(),
+    users: () => User.find()
   },
   Mutation: {
     createInvestment: async (_, { text }) => {
@@ -44,6 +61,11 @@ const resolvers = {
     removeInvestment: async (_, { id }) => {
       await Investment.findByIdAndRemove(id);
       return true;
+    },
+    createUser: async (_, { email, password, postcode }) => {
+      const user = new User({ email, password, postcode });
+      await user.save();
+      return user;
     }
   }
 };
