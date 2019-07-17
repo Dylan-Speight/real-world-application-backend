@@ -1,12 +1,20 @@
-const { GraphQLServer } = require("graphql-yoga");
 const mongoose = require("mongoose");
-const Credential = require('./src/model/credentials')
-const Investment = require('./src/model/investment')
-const 
+const express = require("express")
+const bodyParser = require("body-parser")
+const jwt = require('express-jwt');
 
-mongoose.connect("mongodb://localhost/test5");
+const Schema = mongoose.Schema;
 
-const server = new GraphQLServer({ typeDefs, resolvers });
-mongoose.connection.once("open", function() {
-  server.start(() => console.log("Server is running on localhost:4000"));
-});
+const app = express()
+const port = 4000
+
+mongoose.connect("mongodb://localhost/usersdb");
+mongoose.connection.on("error", err => console.log(err))
+
+app.set("view engine", "ejs")
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+
+app.use(require("./routes"))
+
+app.listen(port, () => console.log(`Server is listening on port ${port}`))

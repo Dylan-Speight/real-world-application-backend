@@ -1,0 +1,14 @@
+<h1>Investments</h1>
+
+<a href="/investments/new">Create New Investment</a>
+
+<% for (investment of investments) { %>
+    <div>
+        <p>id: <%= investment.id %></p>
+        <p>address: <%= investment.address %></p>
+        <p>pricing: <%= investment.pricing %></p>
+        <p>description: <%= investment.description %></p>
+
+    </div>
+    <hr />
+<% } %>

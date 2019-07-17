@@ -1,0 +1,14 @@
+<h1>Users</h1>
+
+<a href="/users/new">Create New user</a>
+
+<% for (user of users) { %>
+    <div>
+        <p>id: <%= user.id %></p>
+        <p>address: <%= user.address %></p>
+        <p>pricing: <%= user.pricing %></p>
+        <p>description: <%= user.description %></p>
+
+    </div>
+    <hr />
+<% } %>
