@@ -1,0 +1,14 @@
+<h1>investments</h1>
+
+<a href="/users/new">Create New Investment</a>
+
+<% for (user of users) { %>
+    <div>
+        <p>id: <%= investment.id %></p>
+        <p>address: <%= investment.address %></p>
+        <p>pricing: <%= investment.pricing %></p>
+        <p>description: <%= investment.description %></p>
+
+    </div>
+    <hr />
+<% } %>
