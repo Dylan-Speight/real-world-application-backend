@@ -2,8 +2,8 @@ const { InvestmentModel } = require("../models/investment_model")
 
 async function create(req, res) {
     //logic for creating a resource
-    let {id, address, description, pricing} = req.body
-    let user = await InvestmentModel.create({ id, address, description, pricing })
+    let {propertyData} = req.body                                    
+    let investment = await InvestmentModel.create({propertyData})
         .catch(err => res.status(500).send(err))
 
     res.redirect("/investments")
