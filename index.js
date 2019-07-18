@@ -19,7 +19,7 @@ const app = express()
 const port = 4000
 app.use(cors());
 app.use(cookieParser());
-const mongo_uri = "mongodb://localhost/usersdb"
+const mongo_uri = "mongodb://127.0.0.1/usersdb"
 mongoose.connect(mongo_uri, function(err) {
     if (err) {
       throw err;
