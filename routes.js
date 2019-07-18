@@ -2,7 +2,7 @@ const express = require("express")
 const router = express.Router()
 const UserController = require("./controllers/user_controller")
 const InvestmentController = require("./controllers/investment_controller")
-
+const app = express()
 app.get('/', function (req, res) {
     res.send('hello world')
   })
