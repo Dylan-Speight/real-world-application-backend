@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser');
 const withAuth = require('./middleware/auth');
 
 const cors = require('cors');
-const User = require('./models/User.js');
+const User = require('./models/user.js');
 
 const corsOptions = {
     origin: 'http://localhost:3000'
