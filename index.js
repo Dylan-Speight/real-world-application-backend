@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const express = require("express")
+// var session = require('express-session');
+
 const bodyParser = require("body-parser")
 // const jwt = require('express-jwt');
 const jwt = require('jsonwebtoken');
@@ -17,8 +19,25 @@ const secret = 'mysecretsshhh';
 
 const app = express()
 const port = 4000
-app.use(cors());
+
+
+app.use(cors(corsOptions));
 app.use(cookieParser());
+// app.use(session({
+//     secret: secret,
+//     cookie: {
+//         path: '/',
+//         domain: 'localhost:3000',
+//         maxAge: 1000 * 60 * 24 // 24 hours
+//     }
+// }));
+// app.use(function(req, res, next) {
+//     res.header('Access-Control-Allow-Credentials', true);
+//     res.header('Access-Control-Allow-Origin', req.headers.origin);
+//     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+//     res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
+//     next();
+// });
 const mongo_uri = "mongodb://localhost/usersdb"
 mongoose.connect(mongo_uri, function(err) {
     if (err) {
@@ -27,9 +46,8 @@ mongoose.connect(mongo_uri, function(err) {
       console.log(`Successfully connected to ${mongo_uri}`);
     }
   });
-// mongoose.connect("mongodb://localhost/usersdb");
-// mongoose.connection.on("error", err => console.log(err))
 
+  app.options('*', cors());
 
 app.set("view engine", "ejs")
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -46,7 +64,8 @@ app.get('/api/secret', withAuth, function(req, res) {
 });
 
 app.get('/checkToken', withAuth, function(req, res) {
-    res.sendStatus(200);
+    res.status(200).send("yes")
+    // res.sendStatus(200);
 });
 
 
@@ -55,49 +74,57 @@ app.post('/api/register', function(req, res) {
     const { email, password } = req.body;
     const user = new User({ email, password });
     user.save(function(err) {
-        console.log(err)
         if (err) {
-            res.status(500)
-            .send("Error registering new user please try again.");
+            res.status(500).json({error:"Error registering new user please try again."});
         } else {
             res.status(200).send("Welcome to the club!");
         }
     });
 });
+
+
 app.post('/api/authenticate', function(req, res) {
+    // console.log(req.body)
     const { email, password } = req.body;
     User.findOne({ email }, function(err, user) {
         if (err) {
+            console.log("user doesn't exist")
+
             console.error(err);
             res.status(500)
             .json({
             error: 'Internal error please try again'
             });
         } else if (!user) {
+            console.log("Wrong deets")
+
             res.status(401)
             .json({
                 error: 'Incorrect email or password'
             });
         } else {
             user.isCorrectPassword(password, function(err, same) {
+                console.log("CorrectPass")
             if (err) {
                 res.status(500)
                 .json({
                     error: 'Internal error please try again'
                 });
             } else if (!same) {
+                console.log("typo somewhere")
+
                 res.status(401)
                 .json({
                     error: 'Incorrect email or password'
                 });
             } else {
-                // Issue token
+                console.log("token issued")
                 const payload = { email };
                 const token = jwt.sign(payload, secret, {
                 expiresIn: '1h'
-                });
-                res.cookie('token', token, { httpOnly: true })
-                .sendStatus(200);
+                })
+                console.log(token)
+                res.status(200).json({'token': token})
             }
             });
         }
