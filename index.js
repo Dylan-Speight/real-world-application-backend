@@ -9,7 +9,7 @@ const cookieParser = require('cookie-parser');
 const withAuth = require('./middleware/auth');
 
 const cors = require('cors');
-const User = require('./models/User.js');
+const User = require('./models/user.js');
 
 const corsOptions = {
     origin: 'http://localhost:3000'
@@ -23,22 +23,7 @@ const port = 4000
 
 app.use(cors(corsOptions));
 app.use(cookieParser());
-// app.use(session({
-//     secret: secret,
-//     cookie: {
-//         path: '/',
-//         domain: 'localhost:3000',
-//         maxAge: 1000 * 60 * 24 // 24 hours
-//     }
-// }));
-// app.use(function(req, res, next) {
-//     res.header('Access-Control-Allow-Credentials', true);
-//     res.header('Access-Control-Allow-Origin', req.headers.origin);
-//     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-//     res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
-//     next();
-// });
-const mongo_uri = "mongodb://localhost/usersdb"
+const mongo_uri = "mongodb://127.0.0.1/usersdb"
 mongoose.connect(mongo_uri, function(err) {
     if (err) {
       throw err;
