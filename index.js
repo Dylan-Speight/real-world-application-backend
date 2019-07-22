@@ -69,7 +69,6 @@ app.post('/api/register', function(req, res) {
 
 
 app.post('/api/authenticate', function(req, res) {
-    // console.log(req.body)
     const { email, password } = req.body;
     User.findOne({ email }, function(err, user) {
         if (err) {
