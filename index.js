@@ -1,3 +1,4 @@
+const MongoClient = require("mongodb").MongoClient;
 const mongoose = require("mongoose");
 const express = require("express")
 // var session = require('express-session');
@@ -24,14 +25,21 @@ const port = 4000
 
 app.use(cors(corsOptions));
 app.use(cookieParser());
-const mongo_uri = "mongodb://127.0.0.1/usersdb"
-mongoose.connect(mongo_uri, function(err) {
-    if (err) {
-      throw err;
-    } else {
-      console.log(`Successfully connected to ${mongo_uri}`);
-    }
-  });
+// const mongo_uri = "mongodb://127.0.0.1/usersdb"
+// mongoose.connect(mongo_uri, function(err) {
+//     if (err) {
+//       throw err;
+//     } else {
+//       console.log(`Successfully connected to ${mongo_uri}`);
+//     }
+//   });
+const uri = "mongodb+srv://realworld:<password>@cluster0-fhhab.mongodb.net/test?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true });
+client.connect(err => {
+  const collection = client.db("test").collection("devices");
+  // perform actions on the collection object
+  client.close();
+});
 
   app.options('*', cors());
 
