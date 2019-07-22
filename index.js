@@ -34,13 +34,14 @@ app.use(cookieParser());
 //     }
 //   });
 
-const uri = "mongodb+srv://realworld:realworld@cluster0-fhhab.mongodb.net/test?retryWrites=true&w=majority";
+const uri = "mongodb+srv://realworld:realworld@cluster0-fhhab.mongodb.net/usersdb?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true });
-MongoClient.connect(err => {
-  const collection = client.db("test").collection("devices");
+client.connect(err => {
+  const collection = client.db("usersdb").collection("users");
   // perform actions on the collection object
   client.close();
 });
+
 
   app.options('*', cors());
 
