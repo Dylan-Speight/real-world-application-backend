@@ -11,6 +11,8 @@ const UserSchema = new mongoose.Schema({
 const UserModel = mongoose.model('Users',UserSchema);
 
 UserSchema.methods.isCorrectPassword = function(password, callback){
+  console.log("ITS THIS ONE")
+
     bcrypt.compare(password, this.password, function(err, same) {
         if (err) {
             callback(err);
@@ -21,6 +23,7 @@ UserSchema.methods.isCorrectPassword = function(password, callback){
 }
 
 UserSchema.pre('save', function(next) {
+  console.log("ITS THIS ONE TOO")
     // console.log(UserModel.find({"email": user.email}))
     // console.log(user)
     // UserModel.find({"email": user.email}), function (err, docs) {

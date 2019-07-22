@@ -1,16 +1,17 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema
 
-const InvestmentsSchema = new Schema({
-  propertyData: [
-    {
+
+const InvestmentSchema = new Schema({
       price: {
         income: String,
         expenses: String,
         value: String,
-        rio: String
+        rio: String,
+        displayPrice: String
       },
       address: {
+        displayableAddress: String,
         state: String,
         postcode: String,
         suburb: String,
@@ -23,11 +24,10 @@ const InvestmentsSchema = new Schema({
         }
       ],
       description: String,
-      id: String
-    }
-  ]
+      propertyid: String,
+      userid: String
 });
 
-const InvestmentModel = mongoose.model("Investment", InvestmentsSchema);
+const InvestmentModel = mongoose.model("investment", InvestmentSchema);
 
-module.exports = { InvestmentModel, InvestmentsSchema };
+module.exports = mongoose.model('Investment', InvestmentSchema);
