@@ -33,9 +33,10 @@ app.use(cookieParser());
 //       console.log(`Successfully connected to ${mongo_uri}`);
 //     }
 //   });
-const uri = "mongodb+srv://realworld:<password>@cluster0-fhhab.mongodb.net/test?retryWrites=true&w=majority";
+
+const uri = "mongodb+srv://realworld:realworld@cluster0-fhhab.mongodb.net/test?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true });
-client.connect(err => {
+MongoClient.connect(err => {
   const collection = client.db("test").collection("devices");
   // perform actions on the collection object
   client.close();
