@@ -8,7 +8,7 @@ const UserSchema = new mongoose.Schema({
   password: { type: String, required: true }
 });
 
-const UserModel = mongoose.model('Users',UserSchema);
+// const UserModel = mongoose.model('Users',UserSchema);
 
 UserSchema.methods.isCorrectPassword = function(password, callback){
   console.log("ITS THIS ONE")
