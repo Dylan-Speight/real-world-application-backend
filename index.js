@@ -23,23 +23,27 @@ const app = express();
 const port = 4000;
 
 app.use(cookieParser());
-// const mongo_uri = "mongodb://127.0.0.1/usersdb"
-// mongoose.connect(mongo_uri, function(err) {
-//     if (err) {
-//       throw err;
-//     } else {
-//       console.log(`Successfully connected to ${mongo_uri}`);
-//     }
-//   });
 
 const uri =
   "mongodb+srv://realworld:realworld@cluster0-fhhab.mongodb.net/usersdb?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true });
-client.connect(err => {
-  const collection = client.db("usersdb").collection("users");
-  // perform actions on the collection object
-  client.close();
-});
+
+  mongoose.connect(mongo_uri, function(err) {
+    if (err) {
+      throw err;
+    } else {
+      console.log(`Successfully connected to ${mongo_uri}`);
+    }
+  });
+
+// const uri =
+//   "mongodb+srv://realworld:realworld@cluster0-fhhab.mongodb.net/usersdb?retryWrites=true&w=majority";
+// const client = new MongoClient(uri, { useNewUrlParser: true });
+// client.connect(err => {
+//   const collection = client.db("usersdb").collection("users");
+//   // perform actions on the collection object
+//   client.close();
+// });
+//lemons are just shook bananas
 
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: false }));
