@@ -14,7 +14,7 @@ const User = require('./models/user.js');
 const Investment = require('./models/investment_model.js')
 
 const corsOptions = {
-    origin: 'https://magnanimous-goat-5432.herokuapp.com/'
+    origin: 'https://magnanimous-goat-5432.herokuapp.com'
 }
 // const Schema = mongoose.Schema;
 const secret = 'mysecretsshhh';
@@ -23,7 +23,7 @@ const app = express()
 const port = 4000
 
 
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(cookieParser());
 // const mongo_uri = "mongodb://127.0.0.1/usersdb"
 // mongoose.connect(mongo_uri, function(err) {
