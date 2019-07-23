@@ -14,7 +14,7 @@ const User = require('./models/user.js');
 const Investment = require('./models/investment_model.js')
 
 const corsOptions = {
-    origin: 'http://localhost:3000'
+    origin: 'https://magnanimous-goat-5432.herokuapp.com/'
 }
 // const Schema = mongoose.Schema;
 const secret = 'mysecretsshhh';
