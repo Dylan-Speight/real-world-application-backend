@@ -24,7 +24,7 @@ const port = 4000;
 
 app.use(cookieParser());
 
-const uri =
+const mongo_uri =
   "mongodb+srv://realworld:realworld@cluster0-fhhab.mongodb.net/usersdb?retryWrites=true&w=majority";
 
   mongoose.connect(mongo_uri, function(err) {
