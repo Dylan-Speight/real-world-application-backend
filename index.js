@@ -14,7 +14,7 @@ const User = require('./models/user.js');
 const Investment = require('./models/investment_model.js')
 
 const corsOptions = {
-    origin: 'https://magnanimous-goat-5432.herokuapp.com'
+    origin: 'https://realifystatedly.netlify.com'
 }
 // const Schema = mongoose.Schema;
 const secret = 'mysecretsshhh';
@@ -23,7 +23,7 @@ const app = express()
 const port = 4000
 
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(cookieParser());
 // const mongo_uri = "mongodb://127.0.0.1/usersdb"
 // mongoose.connect(mongo_uri, function(err) {
@@ -43,12 +43,9 @@ client.connect(err => {
 });
 
 
-  app.options('*', cors());
-
 app.set("view engine", "ejs")
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-app.use(cors(corsOptions));
 
 app.use(require("./routes"))
 
