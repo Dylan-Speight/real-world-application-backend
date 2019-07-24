@@ -3,11 +3,7 @@ const secret = 'mysecretsshhh';
 const withAuth = function(req, res, next) {
   console.log(req)
   const token = req.headers.authorization
-  // const token =
-  //   req.body.token ||
-  //   req.query.token ||
-  //   req.headers.authorization ||
-  //   req.cookies.token;
+
   if (!token ) {
     console.log("doesnt see token")
     res.status(401).send('Unauthorized: No Token provided');

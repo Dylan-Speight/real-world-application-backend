@@ -83,22 +83,19 @@ app.post('/api/authenticate', function(req, res) {
             console.log("Wrong deets")
             res.status(401)
             .json({
-                error: 'Incorrect email or password'
+                error: {email: 'Incorrect Email Address'}
             });
         } else {
             user.isCorrectPassword(password, function(err, same) {
-                console.log("CorrectPass")
             if (err) {
                 res.status(500)
                 .json({
                     error: 'Internal error please try again'
                 });
             } else if (!same) {
-                console.log("typo somewhere")
-
                 res.status(401)
                 .json({
-                    error: 'Incorrect email or password'
+                    error: {password: 'Incorrect Password'}
                 });
             } else {
                 console.log("token issued")

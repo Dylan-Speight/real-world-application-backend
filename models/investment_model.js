@@ -6,7 +6,12 @@ const InvestmentSchema = new Schema({
       price: {
         displayPrice: String,
         estimatedProfit: String,
-        monthlyRepayments: String
+        monthlyRepayments: String,
+        deposit: String, 
+        interestRate: String, 
+        loanTerm: String, 
+        purchaseCosts: String, 
+        ongoingCosts: String
       },
       address: {
         displayableAddress: String,
