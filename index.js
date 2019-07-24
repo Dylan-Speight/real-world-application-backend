@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+var uniqueValidator = require('mongoose-unique-validator');
+
 const express = require("express")
 // var session = require('express-session');
 
@@ -49,8 +51,7 @@ app.get('/api/secret', withAuth, function(req, res) {
 });
 
 app.get('/checkToken', withAuth, function(req, res) {
-    res.status(200).send("yes")
-    // res.sendStatus(200);
+    res.sendStatus(200);
 });
 
 
@@ -73,7 +74,6 @@ app.post('/api/authenticate', function(req, res) {
     User.findOne({ email }, function(err, user) {
         if (err) {
             console.log("user doesn't exist")
-
             console.error(err);
             res.status(500)
             .json({
@@ -81,7 +81,6 @@ app.post('/api/authenticate', function(req, res) {
             });
         } else if (!user) {
             console.log("Wrong deets")
-
             res.status(401)
             .json({
                 error: 'Incorrect email or password'
@@ -116,18 +115,17 @@ app.post('/api/authenticate', function(req, res) {
 });
 
 app.post('/api/saveinvestment', function(req, res) {
-    console.log(req.body)
     const investment = req.body;
-    const newInvestment = new Investment( investment );
-    console.log(investment)
+    let newInvestment = new Investment( investment );
     newInvestment.save(function(err) {
         if (err) {
             res.status(500).json({error:"Error saving investment please try again."});
         } else {
             res.status(200).send("Investment successfully added to profile");
         }
-    });
-})  
+    })
+});
+
 app.post('/api/findinvestment', function(req, res) {
     console.log(req.headers.authorization)
     console.log("looking for investments")
@@ -144,5 +142,25 @@ app.post('/api/findinvestment', function(req, res) {
         }
     })
 })
+
+app.post('/api/removeinvestment', function(req, res) {
+    const investment = req.body;
+    console.log(investment)
+    if (err){
+        res.status(500).json({error:"Error registering new user please try again."});
+    } else {
+    Investment.deleteOne({propertyid : investment}, function(err, res) {
+        res.status(200).json(res)
+    })}
+})
+    
+    // let newInvestment = new Investment( investment );
+    // newInvestment.save(function(err) {
+    //     if (err) {
+    //         res.status(500).json({error:"Error saving investment please try again."});
+    //     } else {
+    //         res.status(200).send("Investment successfully added to profile");
+    //     }
+    // })
 
 app.listen(port, () => console.log(`Server is listening on port ${port}`))
