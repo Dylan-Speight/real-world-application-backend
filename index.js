@@ -1,10 +1,10 @@
 const MongoClient = require("mongodb").MongoClient;
 const mongoose = require("mongoose");
+var uniqueValidator = require("mongoose-unique-validator");
+
 const express = require("express");
-// var session = require('express-session');
 
 const bodyParser = require("body-parser");
-// const jwt = require('express-jwt');
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const withAuth = require("./middleware/auth");
@@ -27,13 +27,13 @@ app.use(cookieParser());
 const mongo_uri =
   "mongodb+srv://realworld:realworld@cluster0-fhhab.mongodb.net/usersdb?retryWrites=true&w=majority";
 
-  mongoose.connect(mongo_uri, function(err) {
-    if (err) {
-      throw err;
-    } else {
-      console.log(`Successfully connected to ${mongo_uri}`);
-    }
-  });
+mongoose.connect(mongo_uri, function(err) {
+  if (err) {
+    throw err;
+  } else {
+    console.log(`Successfully connected to ${mongo_uri}`);
+  }
+});
 
 // const uri =
 //   "mongodb+srv://realworld:realworld@cluster0-fhhab.mongodb.net/usersdb?retryWrites=true&w=majority";
@@ -60,8 +60,7 @@ app.get("/api/secret", withAuth, function(req, res) {
 });
 
 app.get("/checkToken", withAuth, function(req, res) {
-  res.status(200).send("yes");
-  // res.sendStatus(200);
+  res.sendStatus(200);
 });
 
 // POST route to register a user
@@ -80,42 +79,31 @@ app.post("/api/register", function(req, res) {
 });
 
 app.post("/api/authenticate", function(req, res) {
-  // console.log(req.body)
   const { email, password } = req.body;
   User.findOne({ email }, function(err, user) {
     if (err) {
-      console.log("user doesn't exist");
-
-      console.error(err);
       res.status(500).json({
         error: "Internal error please try again"
       });
     } else if (!user) {
-      console.log("Wrong deets");
-
       res.status(401).json({
-        error: "Incorrect email or password"
+        error: { email: "Incorrect Email Address" }
       });
     } else {
       user.isCorrectPassword(password, function(err, same) {
-        console.log("CorrectPass");
         if (err) {
           res.status(500).json({
             error: "Internal error please try again"
           });
         } else if (!same) {
-          console.log("typo somewhere");
-
           res.status(401).json({
-            error: "Incorrect email or password"
+            error: { password: "Incorrect Password" }
           });
         } else {
-          console.log("token issued");
           const payload = { email };
           const token = jwt.sign(payload, secret, {
             expiresIn: "1h"
           });
-          console.log(token);
           res.status(200).json({ token: token });
         }
       });
@@ -124,10 +112,8 @@ app.post("/api/authenticate", function(req, res) {
 });
 
 app.post("/api/saveinvestment", function(req, res) {
-  console.log(req.body);
   const investment = req.body;
-  const newInvestment = new Investment(investment);
-  console.log(investment);
+  let newInvestment = new Investment(investment);
   newInvestment.save(function(err) {
     if (err) {
       res
@@ -138,60 +124,36 @@ app.post("/api/saveinvestment", function(req, res) {
     }
   });
 });
+
 app.post("/api/findinvestment", function(req, res) {
-  console.log(req.headers.authorization);
-  console.log("looking for investments");
-  const { email } = req.headers.authorization;
-  Investment.find(email, function(err, investment) {
+  const email = req.headers.authorization;
+  Investment.find({ userid: email }, function(err, investment) {
     if (err) {
-      console.log("User doesn't have any investments");
+      res.status(500).json("User doesn't have any investments");
     } else {
-      console.log("found email");
-      console.log(investment);
       res.status(200).json(investment);
     }
   });
 });
-//             console.error(err);
-//             res.status(500)
-//             .json({
-//             error: 'Internal error please try again'
-//             });
-//         } else if (!user) {
-//             console.log("Wrong deets")
 
-//             res.status(401)
-//             .json({
-//                 error: 'Incorrect email or password'
-//             });
-//         } else {
-//             user.isCorrectPassword(password, function(err, same) {
-//                 console.log("CorrectPass")
-//             if (err) {
-//                 res.status(500)
-//                 .json({
-//                     error: 'Internal error please try again'
-//                 });
-//             } else if (!same) {
-//                 console.log("typo somewhere")
+app.post("/api/removeinvestment", function(req, res) {
+  const investment = req.body.propertyid;
+  Investment.findOneAndDelete(
+    { propertyid: investment.investment.propertyid, userid: investment.email },
+    function(err, investment) {
+      if (investment) {
+        console.log(investment);
+      }
+      if (err) {
+        console.log("error");
+        res
+          .status(500)
+          .json({ error: "Error removing investment please try again." });
+      } else {
+        res.status(200);
+      }
+    }
+  );
+});
 
-//                 res.status(401)
-//                 .json({
-//                     error: 'Incorrect email or password'
-//                 });
-//             } else {
-//                 console.log("token issued")
-//                 const payload = { email };
-//                 const token = jwt.sign(payload, secret, {
-//                 expiresIn: '1h'
-//                 })
-//                 console.log(token)
-//                 res.status(200).json({'token': token})
-//             }
-//             });
-//         }
-//     });
-// });
-app.listen(process.env.PORT || port, () =>
-  console.log(`Server is listening on port ${port}`)
-);
+app.listen(port, () => console.log(`Server is listening on port ${port}`));

@@ -1,14 +1,17 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema
-
+var uniqueValidator = require('mongoose-unique-validator');
 
 const InvestmentSchema = new Schema({
       price: {
-        income: String,
-        expenses: String,
-        value: String,
-        rio: String,
-        displayPrice: String
+        displayPrice: String,
+        estimatedProfit: String,
+        monthlyRepayments: String,
+        deposit: String, 
+        interestRate: String, 
+        loanTerm: String, 
+        purchaseCosts: String, 
+        ongoingCosts: String
       },
       address: {
         displayableAddress: String,
@@ -24,9 +27,11 @@ const InvestmentSchema = new Schema({
         }
       ],
       description: String,
-      propertyid: String,
+      propertyid: {type: String, unique: true},
       userid: String
 });
+
+InvestmentSchema.plugin(uniqueValidator);
 
 const InvestmentModel = mongoose.model("investment", InvestmentSchema);
 
