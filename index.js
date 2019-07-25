@@ -156,4 +156,4 @@ app.post("/api/removeinvestment", function(req, res) {
   );
 });
 
-app.listen(port, () => console.log(`Server is listening on port ${port}`));
+app.listen(process.env.PORT || 5000);
