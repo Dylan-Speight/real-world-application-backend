@@ -1,4 +1,3 @@
-
 async function create(req, res) {
     //logic for creating a resource
     let {id, address, description, pricing} = req.body
