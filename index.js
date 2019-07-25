@@ -2,10 +2,8 @@ const mongoose = require("mongoose");
 var uniqueValidator = require('mongoose-unique-validator');
 
 const express = require("express")
-// var session = require('express-session');
 
 const bodyParser = require("body-parser")
-// const jwt = require('express-jwt');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const withAuth = require('./middleware/auth');
@@ -73,14 +71,11 @@ app.post('/api/authenticate', function(req, res) {
     const { email, password } = req.body;
     User.findOne({ email }, function(err, user) {
         if (err) {
-            console.log("user doesn't exist")
-            console.error(err);
             res.status(500)
             .json({
             error: 'Internal error please try again'
             });
         } else if (!user) {
-            console.log("Wrong deets")
             res.status(401)
             .json({
                 error: {email: 'Incorrect Email Address'}
@@ -98,12 +93,10 @@ app.post('/api/authenticate', function(req, res) {
                     error: {password: 'Incorrect Password'}
                 });
             } else {
-                console.log("token issued")
                 const payload = { email };
                 const token = jwt.sign(payload, secret, {
                 expiresIn: '1h'
                 })
-                console.log(token)
                 res.status(200).json({'token': token})
             }
             });
@@ -124,40 +117,30 @@ app.post('/api/saveinvestment', function(req, res) {
 });
 
 app.post('/api/findinvestment', function(req, res) {
-    console.log(req.headers.authorization)
-    console.log("looking for investments")
     const email = req.headers.authorization;
-    console.log(email)
     Investment.find( {userid: email }, function(err, investment) {
         if (err) {
-            console.log("User doesn't have any investments")
+            res.status(500).json("User doesn't have any investments")
         }
         else {
-            console.log("found email")
-            console.log(investment)
             res.status(200).json(investment)
         }
     })
 })
 
 app.post('/api/removeinvestment', function(req, res) {
-    const investment = req.body;
-    console.log(investment)
-    if (err){
-        res.status(500).json({error:"Error registering new user please try again."});
-    } else {
-    Investment.deleteOne({propertyid : investment}, function(err, res) {
-        res.status(200).json(res)
-    })}
+    const investment = req.body.propertyid;
+    Investment.findOneAndDelete({propertyid:investment.investment.propertyid, userid: investment.email}, function(err, investment) {
+        if (investment) {
+            console.log(investment)
+        }
+        if (err){
+            console.log("error")
+            res.status(500).json({error:"Error removing investment please try again."});
+        } else {
+            res.status(200)
+        }
+    })
 })
-    
-    // let newInvestment = new Investment( investment );
-    // newInvestment.save(function(err) {
-    //     if (err) {
-    //         res.status(500).json({error:"Error saving investment please try again."});
-    //     } else {
-    //         res.status(200).send("Investment successfully added to profile");
-    //     }
-    // })
 
 app.listen(port, () => console.log(`Server is listening on port ${port}`))
